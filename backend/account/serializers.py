@@ -14,10 +14,3 @@ class AccountSerializer(serializers.ModelSerializer):
     #     user.set_password(password)
     #     user.save()
     #     return user
-
-
-# class AccountProfileSerializer(serializers.ModelSerializer):
-#     account = AccountSerializer()
-#     class Meta:
-#         model = AccountProfileModel
-#         fields = ['account', 'account_name', 'account_phone', 'account_information']

@@ -31,13 +31,18 @@ ALLOWED_HOSTS = ['192.168.91.130']
 # Application definition
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ]
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ]
     
 }
 AUTH_USER_MODEL = 'account.AccountModel'
+
+# recaptcha
+RECAPTCHA_PUBLIC_KEY = ''
+PECAPTCHA_PRIVATE_KEY = ''
 
 INSTALLED_APPS = [
     'django.contrib.admin',
