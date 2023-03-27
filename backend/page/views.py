@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from django.views import View
 # from page.services import Class 
-from account.views import account_login
+# from account.views import account_login
 
-def account_login_view(request):
-    template_name = 'login.html'
-    data = account_login(request)
-    return render(request, template_name, data)
+def login_view(request):
+    return render(request, 'page/login.html')
+
+# def account_login_view(request):
+#     template_name = 'login.html'
+#     data = account_login(request)
+#     return render(request, template_name, data)
 
 # def account_signup_view(request):
 #     template_name = 'register.html'

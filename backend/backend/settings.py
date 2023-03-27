@@ -18,19 +18,20 @@ SECRET_KEY = 'django-insecure-$8l3uluf3ptukbu!b30u=-syfq38%11-rcwakite@mr&dd#q^=
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+AUTH_USER_MODEL = 'account.AccountModel'
 
 # Application definition
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication', #
+        # 'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
     ]
     
 }
-AUTH_USER_MODEL = 'account.AccountModel'
+
 
 # recaptcha
 RECAPTCHA_PUBLIC_KEY = '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI'  # Google's test public key
@@ -38,6 +39,15 @@ RECAPTCHA_PRIVATE_KEY = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe'  # Google's t
 # RECAPTCHA_PUBLIC_KEY = '6LfVqC8lAAAAAIHVZZBNzq8wDAKMAVBV58sngZ98'
 # RECAPTCHA_PRIVATE_KEY = '6LfVqC8lAAAAAOPeSSWm7OeHBmdBJ7tlYS6F3xw4127.0.0.1'
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
+
+# simplejwt
+from datetime import timedelta
+SIMPJWT_ACCESS_TOKEN_LIFETIME = timedelta(minutes=30)
+SIMPJWT_REFRESH_TOKEN_LIFETIME = timedelta(days=1)
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': SIMPJWT_ACCESS_TOKEN_LIFETIME,
+    'REFRESH_TOKEN_LIFETIME': SIMPJWT_REFRESH_TOKEN_LIFETIME,
+} 
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -49,6 +59,7 @@ INSTALLED_APPS = [
     'page',
     'account',
     'rest_framework',
+    'rest_framework_simplejwt',
     'captcha',
     # 'rest_framework_mangoengine',
 ]
@@ -57,7 +68,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware', #
     'django.contrib.auth.middleware.AuthenticationMiddleware', #
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
