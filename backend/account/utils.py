@@ -3,7 +3,7 @@ from django.conf import settings
 def verify_recaptcha(token):
     url = 'https://www.google.com/recaptcha/api/siteverify'
     payload = {
-        'secret': settings.PECAPTCHA_PRIVATE_KEY, 
+        'secret': settings.RECAPTCHA_PRIVATE_KEY, 
         'response': token
     }
     response = requests.post(url, data=payload)

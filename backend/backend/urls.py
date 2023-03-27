@@ -20,5 +20,5 @@ urlpatterns = [
     path('api/accounts/', include('account.urls')),
     # path('api/accounts/', include('auth.urls')),
     # path('home/', include('home.urls')),
-    path('api/test/', include('device.urls')),
+    # path('api/test/', include('device.urls')),
 ]
