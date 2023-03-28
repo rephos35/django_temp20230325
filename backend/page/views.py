@@ -6,6 +6,12 @@ from django.views import View
 def login_view(request):
     return render(request, 'page/login.html')
 
+def signup_view(request):
+    return render(request, 'page/signup.html')
+
+def logout_view(request):
+    return render(request, 'page/logout.html')
+
 # def account_login_view(request):
 #     template_name = 'login.html'
 #     data = account_login(request)

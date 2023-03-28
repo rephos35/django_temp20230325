@@ -24,65 +24,66 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 @api_view(['POST'])
-def register_view(request): 
-    recaptcha_token = request.data.get('recaptcha_token')
-    if verify_recaptcha(recaptcha_token):
-        serializer = AccountSerializer(data=request.data)
-        if serializer.is_valid():
-            # = serializer def create(self, validated_data)
-            user = serializer.save()
-            user.set_password(user.password)
-            user.save()
-            # return JsonResponse({"status": "success"})
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # return JsonResponse({"status": "failed", "error": "Invalid username or password"})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # return JsonResponse({"status": "failed", "error": "reCAPTCHA verification failed"})
-    return Response({'detail': 'reCAPTCHA verification failed'}, status=status.HTTP_401_UNAUTHORIZED)
+def signup_view(request): 
+    # recaptcha_token = request.data.get('g-recaptcha-response')
+    # if not verify_recaptcha(recaptcha_token):
+    #     json_response = {'status': 'error', 'message': 'reCAPTHCHA verification failed'}
+    #     return Response(json_response, status=status.HTTP_401_UNAUTHORIZED)
+    
+    serializer = AccountSerializer(data=request.data)
+    if not serializer.is_valid():
+        json_response = {'status': 'error', 'message': serializer.errors}
+        return Response(json_response, status=status.HTTP_400_BAD_REQUEST)
+    
+    # = serializer def create(self, validated_data)
+    user = serializer.save()
+    user.set_password(user.password)
+    user.save()
+
+    json_response = {
+        'status': 'success',
+        'message': 'signup successfully',
+    }
+    return Response(json_response, status=status.HTTP_201_CREATED)
+
+
 
 @api_view(['POST'])
 def login_view(request):
-    recaptcha_token = request.data.get('recaptcha_token') # POST.get
-    if verify_recaptcha(recaptcha_token):
-        # permission_classes = [permissions.AllowAny]
-        # get data
-        account = request.data.get('account') # POST['']
-        password = request.data.get('password')
-        user = authenticate(request, account=account, password=password)
-        if user is not None:
-            # login
-            login(request, user)
-            # simpletoken
-            jwt_token = {
-                'access_token': str(access_token = AccessToken.for_user(user)),
-                'refresh_token': str(refresh_token = RefreshToken.for_user(user)),
-            }
-
-
-            # create token
-            ## token, created = Token.objects.get_or_create(user=user)
-            ## return Response({'token': token.key}, status=status.HTTP_200_OK)
-            # return JsonResponse({"status": "success"})
-            # return Response({'detail': 'Logged in successfully'}, status=status.HTTP_200_OK)
-            return Response(jwt_token, status=status.HTTP_200_OK)
-        ## return Response({'error': 'Invalid login credentials'}, status=status.HTTP_400_BAD_REQUEST)
-        # return JsonResponse({"status": "failed", "error": "Invalid username or password"})
-        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
-    # return JsonResponse({"status": "failed", "error": "reCAPTCHA verification failed"})
-    return Response({'detail': 'reCAPTCHA verification failed'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-
-
-
-
-
-
-
-
-
-
+    # recaptcha_token = request.data.get('g-recaptcha-response') 
+    # if not verify_recaptcha(recaptcha_token):
+    #     json_response = {'status': 'error', 'message': 'reCAPTHCHA verification failed'}
+    #     return Response(json_response, status=status.HTTP_401_UNAUTHORIZED)
+    
+    # permission_classes = [permissions.AllowAny]
+    # get data
+    account = request.data.get('account') # POST[''] # POST.get
+    password = request.data.get('password')
+    user = authenticate(request, account=account, password=password)
+    if user is None:
+        json_response = {'status': 'error', 'message': 'Invalid username or password'}
+        return Response(json_response, status=status.HTTP_400_BAD_REQUEST)
+    
+    # login
+    login(request, user)
+    # generate simpletoken
+    # jwt_token = {
+    #     'access_token': str(AccessToken.for_user(user)),
+    #     'refresh_token': str(RefreshToken.for_user(user))
+    # }
+    json_response = {
+        'status': 'success',
+        'message': 'login successfully',
+        'user': {
+            'account': user.account,
+            'is_superuser': user.is_superuser,
+        },
+        # 'jwt_token': jwt_token
+    }
+    # create token
+    # token, created = Token.objects.get_or_create(user=user)
+    # json_data = {'token': token.key}
+    return Response(json_response, status=status.HTTP_200_OK)
 
 
 
@@ -90,9 +91,16 @@ def login_view(request):
 def logout_view(request):
     # delete token
     # request.user.auth_token.delete()
+    # request.user.jwt_token.delete()
+    
+
+    # refresh_token = request.data.get('refresh_token')
+    # token = RefreshToken(refresh_token)
+    # token.blacklist()
     # logout
-    logout(request)
-    return Response({'detail':'Logged out successfully'}, status=status.HTTP_200_OK)
+    logout(request) # clean auth session data
+    json_response = {'status': 'success'}
+    return Response(json_response, status=status.HTTP_200_OK)
 
 
 

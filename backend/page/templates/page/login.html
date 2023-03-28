@@ -4,20 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>帳號密碼登入 (JSON)</title>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <title>帳號密碼登入</title>
 </head>
 
 <body>
-    <h1>帳號密碼登入 (JSON)</h1>
+    <h1>帳號密碼登入</h1>
     <form id="loginForm">
         <label for="account">帳號:</label>
         <input type="text" id="account" name="account" required>
         <br>
         <label for="password">密碼:</label>
         <input type="password" id="password" name="password" required>
-        <br>
-        <div class="g-recaptcha" data-sitekey="your-recaptcha-site-key"></div>
         <br>
         <button type="submit">登入</button>
     </form>
@@ -27,17 +24,15 @@
 
             const account = document.getElementById('account').value;
             const password = document.getElementById('password').value;
-            const recaptchaToken = grecaptcha.getResponse();
 
-            const response = await fetch('http://192.168.6.128:8787/api/accounts/login/', {
+            const response = await fetch('http://192.168.91.130:8787/api/accounts/login/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     account: account,
-                    password: password,
-                    recaptcha_token: recaptchaToken
+                    password: password
                 })
             });
 
@@ -45,9 +40,6 @@
 
             if (response.status === 200) {
                 alert('登入成功！');
-                // 儲存JWT token，例如:
-                localStorage.setItem('token', responseData.access_token);
-                // 在此添加成功登入後的操作，例如跳轉到其他頁面
             } else {
                 alert('帳號或密碼錯誤，請重新輸入！');
             }
